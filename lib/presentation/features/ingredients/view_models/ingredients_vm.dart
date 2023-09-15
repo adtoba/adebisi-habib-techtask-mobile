@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tech_task/data/repositories/ingredients_repository_impl.dart';
@@ -15,21 +16,34 @@ class IngredientsViewModel extends ChangeNotifier {
     repo = IngredientRepositoryImpl();
   }
 
-  bool _getIngredientsBusy = false;
-  bool get getIngredientsBusy => _getIngredientsBusy;
+
+  String errorMessage = "Oops, an error has occured, Please try again!";
 
   Future<List<IngredientsResponse>?> getIngredients() async {
-    _getIngredientsBusy = true;
-    notifyListeners();
+    errorMessage = "";
 
     try {
       final response = await repo.getIngredients();
       return response;
-    } catch (e) {
-      return null;
-    } finally {
-      _getIngredientsBusy = false;
-      notifyListeners();
+    } on DioException catch (e) {
+      errorMessage = _handleException(e);
     }
+    return null;
+  }
+
+  String _handleException(DioException ex) {
+    String message = '';
+
+    if (ex.type == DioExceptionType.connectionError) {
+      message = "Ensure you're connected to the internet and try again!";
+    } else if(ex.type == DioExceptionType.sendTimeout) {
+      message = "Your connection has timed out, try again!";
+    } else if(ex.type == DioExceptionType.sendTimeout){
+      message = "Your connection has timed out, try again!";
+    } else {
+      message = "Oops, an error has occured, Please try again";
+    }
+
+    return message;
   }
 }

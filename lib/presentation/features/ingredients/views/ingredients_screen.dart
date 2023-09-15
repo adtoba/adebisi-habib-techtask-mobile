@@ -23,11 +23,18 @@ class _IngredientsScreenState extends ConsumerState<IngredientsScreen> {
 
   final controller = TextEditingController();
 
-  late final Future future = ref.read(ingredientsViewModel).getIngredients();
+  late Future<List<IngredientsResponse>?> _ingredients;
+
+  @override
+  void initState() {
+    super.initState();
+    _ingredients = ref.read(ingredientsViewModel).getIngredients();
+  }
 
   @override
   Widget build(BuildContext context) {
     final config = SizeConfig();
+    var ingredientsProvider = ref.read(ingredientsViewModel);
 
     return Scaffold(
       backgroundColor: Palette.scaffoldBackgroundColor,
@@ -44,26 +51,56 @@ class _IngredientsScreenState extends ConsumerState<IngredientsScreen> {
         ),
       ),
       body: Container(
-        child: FutureBuilder(
-          future: future, 
+        child: FutureBuilder<List<IngredientsResponse>?>(
+          future: _ingredients, 
           builder: ((context, snapshot) {
             if(snapshot.connectionState == ConnectionState.done) {
-              var ingredients = snapshot.data as List<IngredientsResponse>;
 
-              return IngredientsGridView(
-                ingredients: ingredients
-              );
-            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              if(snapshot.hasData) {
+                var ingredients = snapshot.data as List<IngredientsResponse>;
+
+                return IngredientsGridView(
+                  ingredients: ingredients
+                );
+
+              } else {
+                return Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        ingredientsProvider.errorMessage,
+                        style: CustomTextStyles.normal14.copyWith(
+                          color: Colors.white
+                        ),
+                      ),
+                      TextButton(
+                        child: Text(
+                          "Retry",
+                          style: TextStyle(
+                            color: Colors.white
+                          ),
+                        ),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStatePropertyAll(Colors.green),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _ingredients = ref.read(ingredientsViewModel)
+                                .getIngredients();
+                          });
+                        },
+                      )
+                    ],
+                  ),
+                );
+              } 
+            } else {
               return Center(
                 child: CircularProgressIndicator()
               );
-            } else {
-              return Center(
-                child: Text(
-                  "Failed to load ingredients"
-                ),
-              );
-            }
+            } 
           })
         )
       ),

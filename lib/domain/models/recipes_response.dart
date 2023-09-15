@@ -1,10 +1,10 @@
-class RecipiesResponse {
+class RecipesResponse {
   String? title;
   List<String>? ingredients;
 
-  RecipiesResponse({this.title, this.ingredients});
+  RecipesResponse({this.title, this.ingredients});
 
-  RecipiesResponse.fromJson(Map<String, dynamic> json) {
+  RecipesResponse.fromJson(Map<String, dynamic> json) {
     title = json['title'];
     ingredients = json['ingredients'].cast<String>();
   }

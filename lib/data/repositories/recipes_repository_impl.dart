@@ -6,7 +6,12 @@ import 'package:tech_task/domain/repositories/recipes_repository.dart';
 
 class RecipesRepositoryImpl extends CustomHttpClient implements RecipesRepository {
   @override
-  Future<List<RecipesResponse>> getRecipes({required List<String> ingredients}) async {
+  Future<List<RecipesResponse>> getRecipes({required List<String?> ingredients}) async {
+
+    if(ingredients.isEmpty) {
+      throw AssertionError("You must provide a list of ingredients");
+    }
+
     try {
       final res = await http.get(ApiEndpoints.recipies, queryParameters: {
         "ingredients": ingredients.join(",")

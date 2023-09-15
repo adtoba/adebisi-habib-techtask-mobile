@@ -26,6 +26,7 @@ dependencies:
   hooks_riverpod: ^2.4.0
   flutter_riverpod: ^2.4.0
   google_fonts: any
+  dio: ^5.3.2
 
 dev_dependencies:
   flutter_test:

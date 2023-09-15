@@ -8,6 +8,7 @@ import 'package:tech_task/presentation/styles/textstyles.dart';
 import 'package:tech_task/presentation/utils/dimensions.dart';
 import 'package:tech_task/presentation/utils/extensions.dart';
 import 'package:tech_task/presentation/widgets/ingredient_item.dart';
+import 'package:tech_task/presentation/widgets/retry_widget.dart';
 
 
 class IngredientsScreen extends ConsumerStatefulWidget {
@@ -29,12 +30,17 @@ class _IngredientsScreenState extends ConsumerState<IngredientsScreen> {
   void initState() {
     super.initState();
     _ingredients = ref.read(ingredientsViewModel).getIngredients();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(ingredientsViewModel).showPickerDialog(context);
+    });
+    
   }
 
   @override
   Widget build(BuildContext context) {
     final config = SizeConfig();
-    var ingredientsProvider = ref.read(ingredientsViewModel);
+    var ingredientsProvider = ref.watch(ingredientsViewModel);
+    String selectedDate = ingredientsProvider.selectedDate.toString();
 
     return Scaffold(
       backgroundColor: Palette.scaffoldBackgroundColor,
@@ -49,6 +55,24 @@ class _IngredientsScreenState extends ConsumerState<IngredientsScreen> {
             color: Colors.white
           ),
         ),
+        actions: [
+          Row(
+            children: [
+              Text(
+                "${selectedDate.split(" ").first}",
+                style: CustomTextStyles.normal12.copyWith(
+                  color: Colors.white
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  ingredientsProvider.showPickerDialog(context);
+                }, 
+                icon: Icon(Icons.calendar_today)
+              ),
+            ],
+          )
+        ],
       ),
       body: Container(
         child: FutureBuilder<List<IngredientsResponse>?>(
@@ -64,36 +88,14 @@ class _IngredientsScreenState extends ConsumerState<IngredientsScreen> {
                 );
 
               } else {
-                return Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        ingredientsProvider.errorMessage,
-                        style: CustomTextStyles.normal14.copyWith(
-                          color: Colors.white
-                        ),
-                      ),
-                      TextButton(
-                        child: Text(
-                          "Retry",
-                          style: TextStyle(
-                            color: Colors.white
-                          ),
-                        ),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStatePropertyAll(Colors.green),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _ingredients = ref.read(ingredientsViewModel)
-                                .getIngredients();
-                          });
-                        },
-                      )
-                    ],
-                  ),
+                return RetryWidget(
+                  errorMessage: ingredientsProvider.errorMessage,
+                  onPressed: () {
+                    setState(() {
+                      _ingredients = ref.read(ingredientsViewModel)
+                          .getIngredients();
+                    });
+                  },
                 );
               } 
             } else {
@@ -104,59 +106,15 @@ class _IngredientsScreenState extends ConsumerState<IngredientsScreen> {
           })
         )
       ),
-      // bottomSheet: BottomSheet(
-      //   onClosing: () {},
-      //   backgroundColor: Palette.lightPurple,
-      //   shape: RoundedRectangleBorder(
-      //     borderRadius: BorderRadius.only(
-      //       topLeft: Radius.circular(20),
-      //       topRight: Radius.circular(20),
-      //     )
-      //   ),
-      //   builder: (context) {
-      //     return Container(
-      //       padding: EdgeInsets.symmetric(horizontal: config.sw(20), vertical: config.sh(20)),
-      //       height: config.sh(300),
-      //       width: double.infinity,
-      //       child: Column(
-      //         crossAxisAlignment: CrossAxisAlignment.start,
-      //         children: [
-      //           Text(
-      //             "Select lunch date",
-      //             style: CustomTextStyles.bold16,
-      //           ),
-      //           SizedBox(height: config.sh(20)),
-      //           InkWell(
-      //             onTap: () async {
-      //               final picked = await showDatePicker(
-      //                 context: context, 
-      //                 initialDate: selectedDate, 
-      //                 firstDate: DateTime.now(),
-      //                 lastDate: DateTime(2101)
-      //               );
+      floatingActionButton: Visibility(
+        visible: ingredientsProvider.selectedIngredients.isNotEmpty,
+        child: FloatingActionButton(
+          child: Icon(Icons.arrow_forward),
+          onPressed: () {
 
-      //               if (picked != null) {
-      //                 setState(() {
-      //                   selectedDate = picked;
-      //                   controller.text = selectedDate.toString().split(" ").first;
-      //                 });
-      //               }
-      //             },
-      //             child: TextFormField(
-      //               controller: controller,
-      //               decoration: InputDecoration(
-      //                 prefixIcon: Icon(Icons.calendar_today),
-      //                 hintText: "Pick a date",
-      //                 enabled: false,
-      //                 border: OutlineInputBorder()
-      //               ),
-      //             ),
-      //           )
-      //         ],
-      //       ),
-      //     );
-      //   }
-      // ),
+          },
+        ),
+      ),
     );
   }
 }

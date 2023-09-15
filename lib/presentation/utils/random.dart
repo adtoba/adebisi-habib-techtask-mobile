@@ -11,13 +11,18 @@ class RandomUtil {
       => rand.nextInt(33) + 89));
   }
 
+  static String generateValidDate() {
+    var dt = DateTime.now();
+    return dt.toString().split(" ").first;
+  }
+
   static List<IngredientsResponse> generateRandomIngredients(int length) {
     List<IngredientsResponse> result = [];
 
     for (int i = 0; i < length; i++) {
       result.add(IngredientsResponse(
         title: generateRandomString(6),
-        useBy: generateRandomString(10),
+        useBy: generateValidDate(),
       ));
     }
     return result;

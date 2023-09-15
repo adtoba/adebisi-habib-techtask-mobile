@@ -28,6 +28,6 @@ class CustomHttpClient {
           return handler.next(res);
         },
       )
-    );
+    )..transformer = BackgroundTransformer();
   }
 }

@@ -20,24 +20,25 @@ class IngredientsViewModel extends ChangeNotifier {
 
   DateTime selectedDate = DateTime.now();
 
-  List<String> selectedIngredients = [];
+  List<String> _selectedIngredients = [];
+  List<String> get selectedIngredients => _selectedIngredients;
 
   void addIngredient(String? ingredient) {
-    if(!selectedIngredients.contains(ingredient)) {
-      selectedIngredients.add(ingredient!);
+    if(!_selectedIngredients.contains(ingredient)) {
+      _selectedIngredients.add(ingredient!);
     } else {
-      selectedIngredients.remove(ingredient);
+      _selectedIngredients.remove(ingredient);
     }
     notifyListeners();
   }
 
   void clear() {
-    selectedIngredients.clear();
+    _selectedIngredients.clear();
     notifyListeners();
   }
 
   bool compareUseByAndSelectedDate(DateTime useBy) {
-    if((useBy.isBefore(selectedDate) || useBy.isAtSameMomentAs(selectedDate))) {
+    if((selectedDate.isBefore(useBy) || useBy.isAtSameMomentAs(selectedDate))) {
       return false;
     } else {
       return true;

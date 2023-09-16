@@ -10,7 +10,7 @@ import 'package:tech_task/presentation/styles/textstyles.dart';
 import 'package:tech_task/presentation/utils/dimensions.dart';
 import 'package:tech_task/presentation/widgets/retry_widget.dart';
 
-
+@visibleForTesting
 class IngredientsScreen extends ConsumerStatefulWidget {
   const IngredientsScreen({super.key});
 

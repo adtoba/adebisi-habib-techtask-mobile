@@ -6,21 +6,24 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:tech_task/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    await tester.pumpWidget(MyApp());
+  testWidgets('Verify get recipes button only appears on Ingredients '
+  'screen after ingredients have been selected', (WidgetTester tester) async {
+    await tester.pumpWidget(ProviderScope(child: MyApp()));
+    
+    // This checks that floating action button is not visible on screen initialization
+    expect(find.byType(FloatingActionButton), findsNothing);
+    await tester.pumpAndSettle(Duration(seconds: 5));
 
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // This ensures that the text are visible & the date picker is visible
+    expect(find.text("OK"), findsOneWidget);
+    expect(find.text("SELECT A LUNCH DATE"), findsOneWidget);
+    expect(find.text("INGREDIENTS"), findsOneWidget);
+    expect(find.text("Select ingredients to see available recipes"), findsOneWidget);
   });
 }

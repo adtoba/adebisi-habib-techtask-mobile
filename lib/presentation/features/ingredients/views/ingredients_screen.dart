@@ -31,9 +31,8 @@ class _IngredientsScreenState extends ConsumerState<IngredientsScreen> {
     super.initState();
     _ingredients = ref.read(ingredientsViewModel).getIngredients();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(ingredientsViewModel).showPickerDialog(context);
+      ref.read(ingredientsViewModel).pickDate(context);
     });
-    
   }
 
   @override
@@ -66,7 +65,7 @@ class _IngredientsScreenState extends ConsumerState<IngredientsScreen> {
               ),
               IconButton(
                 onPressed: () {
-                  ingredientsProvider.showPickerDialog(context);
+                  ingredientsProvider.pickDate(context);
                 }, 
                 icon: Icon(Icons.calendar_today)
               ),

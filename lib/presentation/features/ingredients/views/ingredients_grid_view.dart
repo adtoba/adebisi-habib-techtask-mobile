@@ -34,21 +34,21 @@ class IngredientsGridView extends ConsumerWidget {
           date: ingredients[index].useBy,
           onTap: () {
             String? useBy = ingredients[index].useBy;
-            DateTime selectedDate = ingredientsProvider.selectedDate;
             DateTime useByDate = DateTime.parse(useBy!);
-            
-            String formattedSelectedDate = selectedDate.toString().split(" ").first;
-            String formattedUseByDate = useByDate.toString().split(" ").first;
 
-            bool sameYearMonthDay = formattedUseByDate == formattedSelectedDate;
+            bool canAdd = ingredientsProvider.compareUseByAndSelectedDate(useByDate);
 
-            if(!useByDate.isAfter(selectedDate) && !sameYearMonthDay) {
+            if(canAdd) {
               ingredientsProvider.addIngredient(ingredients[index].title);
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(
-                  "You cannot select this recipient because the selected date is past its use date"
-                ))
+                SnackBar(
+                  content: Text(
+                    "You can't select this ingredient because the "
+                    "selected date is past its use date"
+                  ),
+                  duration: Duration(milliseconds: 500),
+                )
               );
             }
           },

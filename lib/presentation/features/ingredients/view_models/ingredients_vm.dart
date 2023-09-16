@@ -39,6 +39,14 @@ class IngredientsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool compareUseByAndSelectedDate(DateTime useBy) {
+    if(selectedDate.isBefore(useBy) || useBy.isAtSameMomentAs(selectedDate)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   Future<List<IngredientsResponse>?> getIngredients() async {
     errorMessage = "";
 
@@ -57,72 +65,14 @@ class IngredientsViewModel extends ChangeNotifier {
       context: context, 
       initialDate: selectedDate, 
       firstDate: DateTime(2001),
-      lastDate: DateTime(2101)
+      lastDate: DateTime(2101),
+      helpText: "Select a lunch date".toUpperCase(),
     );
 
     if (picked != null) {
       selectedDate = picked;
-      Navigator.pop(context);
       clear();
       notifyListeners();
     }
   }
-
-  void showPickerDialog(BuildContext context) {
-    final config = SizeConfig();
-
-    showDialog(
-      context: context, 
-      barrierDismissible: false,
-      builder: (context) {
-        return WillPopScope(
-          onWillPop: () async => false,
-          child: AlertDialog(
-            backgroundColor: Color(0xff280071),
-            title: Text(
-              "Select Lunch Date",
-              style: CustomTextStyles.bold16.copyWith(
-                color: Colors.white,
-                fontSize: config.sp(20)
-              ),
-            ),
-            content: InkWell(
-              onTap: () => pickDate(context),
-              child: Container(
-                height: config.sh(45),
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: config.sw(10)),
-                child: Row(
-                  children: [
-                    Text(
-                      "${selectedDate.toString().split(" ").first}",
-                      style: CustomTextStyles.normal14.copyWith(
-                        color: Colors.white
-                      ),
-                    )
-                  ],
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: Colors.grey
-                  )
-                ),
-              ),
-            ),
-            actions: [
-              TextButton(
-                child: Text("Close"),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
-            ],
-          ),
-        );
-      }
-    );
-  }
-
-  
 }

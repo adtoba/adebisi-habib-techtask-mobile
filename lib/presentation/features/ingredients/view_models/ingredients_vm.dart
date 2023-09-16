@@ -1,12 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tech_task/data/repositories/ingredients_repository_impl.dart';
 import 'package:tech_task/domain/models/ingredients_response.dart';
 import 'package:tech_task/domain/repositories/ingredients_repository.dart';
-import 'package:tech_task/presentation/styles/textstyles.dart';
-import 'package:tech_task/presentation/utils/dimensions.dart';
 import 'package:tech_task/presentation/utils/error_handler.dart';
 
 final ingredientsViewModel = ChangeNotifierProvider<IngredientsViewModel>((ref) {
@@ -40,7 +37,7 @@ class IngredientsViewModel extends ChangeNotifier {
   }
 
   bool compareUseByAndSelectedDate(DateTime useBy) {
-    if(selectedDate.isBefore(useBy) || useBy.isAtSameMomentAs(selectedDate)) {
+    if((useBy.isBefore(selectedDate) || useBy.isAtSameMomentAs(selectedDate))) {
       return false;
     } else {
       return true;

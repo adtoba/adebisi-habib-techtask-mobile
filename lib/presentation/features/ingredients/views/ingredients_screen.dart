@@ -3,14 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tech_task/domain/models/ingredients_response.dart';
 import 'package:tech_task/presentation/features/ingredients/view_models/ingredients_vm.dart';
 import 'package:tech_task/presentation/features/ingredients/views/ingredients_grid_view.dart';
-import 'package:tech_task/presentation/features/recipes/view_models/recipes_vm.dart';
 import 'package:tech_task/presentation/features/recipes/views/recipes_screen.dart';
 import 'package:tech_task/presentation/styles/navigator.dart';
 import 'package:tech_task/presentation/styles/palette.dart';
 import 'package:tech_task/presentation/styles/textstyles.dart';
 import 'package:tech_task/presentation/utils/dimensions.dart';
-import 'package:tech_task/presentation/utils/extensions.dart';
-import 'package:tech_task/presentation/widgets/ingredient_item.dart';
 import 'package:tech_task/presentation/widgets/retry_widget.dart';
 
 

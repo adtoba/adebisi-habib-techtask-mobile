@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tech_task/domain/models/ingredients_response.dart';
 import 'package:tech_task/presentation/features/ingredients/view_models/ingredients_vm.dart';
 import 'package:tech_task/presentation/features/ingredients/views/ingredients_grid_view.dart';
+import 'package:tech_task/presentation/features/recipes/view_models/recipes_vm.dart';
+import 'package:tech_task/presentation/features/recipes/views/recipes_screen.dart';
+import 'package:tech_task/presentation/styles/navigator.dart';
 import 'package:tech_task/presentation/styles/palette.dart';
 import 'package:tech_task/presentation/styles/textstyles.dart';
 import 'package:tech_task/presentation/utils/dimensions.dart';
@@ -74,35 +77,53 @@ class _IngredientsScreenState extends ConsumerState<IngredientsScreen> {
         ],
       ),
       body: Container(
-        child: FutureBuilder<List<IngredientsResponse>?>(
-          future: _ingredients, 
-          builder: ((context, snapshot) {
-            if(snapshot.connectionState == ConnectionState.done) {
-
-              if(snapshot.hasData) {
-                var ingredients = snapshot.data as List<IngredientsResponse>;
-
-                return IngredientsGridView(
-                  ingredients: ingredients
-                );
-
-              } else {
-                return RetryWidget(
-                  errorMessage: ingredientsProvider.errorMessage,
-                  onPressed: () {
-                    setState(() {
-                      _ingredients = ref.read(ingredientsViewModel)
-                          .getIngredients();
-                    });
-                  },
-                );
-              } 
-            } else {
-              return Center(
-                child: CircularProgressIndicator()
-              );
-            } 
-          })
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: config.sh(20)),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: config.sw(20)),
+              child: Text(
+                "Select ingredients to see available recipes",
+                style: CustomTextStyles.normal14.copyWith(
+                  color: Colors.white
+                ),
+              ),
+            ),
+            SizedBox(height: config.sh(10)),
+            Expanded(
+              child: FutureBuilder<List<IngredientsResponse>?>(
+                future: _ingredients, 
+                builder: ((context, snapshot) {
+                  if(snapshot.connectionState == ConnectionState.done) {
+            
+                    if(snapshot.hasData) {
+                      var ingredients = snapshot.data as List<IngredientsResponse>;
+            
+                      return IngredientsGridView(
+                        ingredients: ingredients
+                      );
+            
+                    } else {
+                      return RetryWidget(
+                        errorMessage: ingredientsProvider.errorMessage,
+                        onPressed: () {
+                          setState(() {
+                            _ingredients = ref.read(ingredientsViewModel)
+                                .getIngredients();
+                          });
+                        },
+                      );
+                    } 
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator()
+                    );
+                  } 
+                })
+              ),
+            ),
+          ],
         )
       ),
       floatingActionButton: Visibility(
@@ -110,7 +131,7 @@ class _IngredientsScreenState extends ConsumerState<IngredientsScreen> {
         child: FloatingActionButton(
           child: Icon(Icons.arrow_forward),
           onPressed: () {
-
+            push(RecipesScreen());
           },
         ),
       ),

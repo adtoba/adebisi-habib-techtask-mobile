@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:tech_task/domain/constants/endpoints.dart';
 
 class CustomHttpClient {
@@ -29,5 +31,15 @@ class CustomHttpClient {
         },
       )
     )..transformer = BackgroundTransformer();
+
+    if(!kReleaseMode) {
+      http.interceptors.addAll([
+        PrettyDioLogger(
+          request: true,
+          responseBody: true,
+          error: true
+        )
+      ]);
+    }
   }
 }

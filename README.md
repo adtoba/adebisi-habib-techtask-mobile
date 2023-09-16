@@ -11,6 +11,8 @@ Packages used:
 - The user sees a list of Ingredients and they're able to pick ingredients if its not past its use-by date.
 - A floatingActionButton appears after they've selected ingredients. A user can click on this floatingActionButton to see the recipes.
 
+You can find a video demonstration here. [Demo](https://drive.google.com/file/d/1wgUdIJE8ZK2NxAbyvl7AVJHZklObTAWt/view?usp=sharing)
+
 ## Screenshots
 <p float="left">
   <img src="https://github.com/adtoba/klasha-flutter-tech-task/assets/24235903/6b522eef-a4ab-4409-b407-7e82b9163872" width="25%" />
